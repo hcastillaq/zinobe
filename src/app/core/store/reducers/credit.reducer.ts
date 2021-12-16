@@ -1,17 +1,14 @@
-import { Action, createReducer } from "@ngrx/store";
+import { Action, createReducer } from '@ngrx/store';
 
+export interface ReducerCredit {}
 
-interface ReducerCredit {
+export const reducerCreditInitialState: ReducerCredit = {};
 
-}
+const reducer = createReducer<ReducerCredit>(reducerCreditInitialState);
 
-export const reducerCreditInitialState : ReducerCredit ={
-
-}
-
-const reducer = createReducer<ReducerCredit>(reducerCreditInitialState)
-
-
-export  const  reducerCredit = (state : ReducerCredit, action : Action) => {
-  return reducer(state, action)
-}
+export const reducerCredit = (
+  state: ReducerCredit | undefined,
+  action: Action
+) => {
+  return reducer(state, action);
+};

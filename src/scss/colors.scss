@@ -1,1 +1,4 @@
+@use '@angular/material' as mat;
+
 $background: whitesmoke;
+$primary: map-get(mat.$indigo-palette, 500);

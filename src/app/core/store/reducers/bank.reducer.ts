@@ -1,11 +1,16 @@
-import { Action, createReducer } from "@ngrx/store";
+import { Action, createReducer } from '@ngrx/store';
 
-export interface ReducerBank {}
-export const reducerBankInitialState :ReducerBank = {
-
+export interface ReducerBankState {
+  capital: number;
 }
-const reducer = createReducer(reducerBankInitialState);
+export const reducerBankInitialState: ReducerBankState = {
+  capital: 9999999,
+};
+const reducer = createReducer<ReducerBankState>(reducerBankInitialState);
 
-export const reducerBank = (state:ReducerBank, action: Action) => {
-  return reducer(state, action)
-}
+export const reducerBank = (
+  state: ReducerBankState | undefined,
+  action: Action
+) => {
+  return reducer(state, action);
+};
