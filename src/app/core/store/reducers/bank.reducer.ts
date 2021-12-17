@@ -5,7 +5,7 @@ export interface ReducerBankState {
   capital: number;
 }
 export const reducerBankInitialState: ReducerBankState = {
-  capital: 9999999,
+  capital: 0,
 };
 const reducer = createReducer<ReducerBankState>(
   reducerBankInitialState,

@@ -9,6 +9,9 @@ import { BankRepository } from '../repositories/abstracts/bank.repository';
 })
 export class BankService {
   constructor(private repository: BankRepository) {}
+  getCapital(): Observable<Bank> {
+    return this.repository.getCapital();
+  }
   pay(amount: number): Observable<Bank> {
     return this.repository.pay(amount).pipe(
       catchError((err: HttpErrorResponse) => {

@@ -3,7 +3,7 @@ import { User } from '../../interfaces/user.interface';
 import { UserRepository } from '../abstracts/user.repository';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,11 @@ export class UserHttpRepository extends UserRepository {
     super();
   }
 
+  getUserByCedula(cedula: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.path}/users`, {
+      params: new HttpParams().set('cedula', cedula),
+    });
+  }
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(`${this.path}/users`);
   }

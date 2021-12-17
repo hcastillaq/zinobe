@@ -9,12 +9,14 @@ import { BankRepository } from '../abstracts/bank.repository';
   providedIn: 'root',
 })
 export class BankHttpRepository extends BankRepository {
-  private path = environment.api;
+  private path = environment.api + '/bank';
   constructor(private http: HttpClient) {
     super();
   }
-
+  getCapital(): Observable<Bank> {
+    return this.http.get<Bank>(this.path);
+  }
   pay(amount: number): Observable<Bank> {
-    return this.http.post<Bank>(`${this.path}/bank/pay`, { amount });
+    return this.http.post<Bank>(`${this.path}/pay`, { amount });
   }
 }

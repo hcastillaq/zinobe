@@ -1,0 +1,16 @@
+<div fxLayout="column" fxLayoutGap="10px" fxFlex="100%">
+  <span>Select Amount of the Credit </span>
+  <mat-slider
+    fxFlex="100%"
+    color="primary"
+    thumbLabel
+    [min]="min"
+    [max]="max"
+    [step]="100"
+    [displayWith]="formatLabel"
+    [formControl]="control">
+  </mat-slider>
+  <div fxLayout="row" fxLayoutAlign="end" class="mt">
+    <span class="mat-h3">{{ control.value | currency }}</span>
+  </div>
+</div>

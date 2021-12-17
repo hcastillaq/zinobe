@@ -12,4 +12,8 @@ export class UserService {
   getUsers(): Observable<User[]> {
     return this.repository.getAll();
   }
+
+  getUserByCedula(cedula: number): Observable<User[]> {
+    return this.repository.getUserByCedula(cedula);
+  }
 }

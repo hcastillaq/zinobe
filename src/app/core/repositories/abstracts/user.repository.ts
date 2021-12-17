@@ -7,4 +7,5 @@ import { User } from '../../interfaces/user.interface';
 })
 export abstract class UserRepository {
   abstract getAll(): Observable<User[]>;
+  abstract getUserByCedula(cedula: number): Observable<User[]>;
 }

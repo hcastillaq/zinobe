@@ -7,4 +7,5 @@ import { Bank } from '../../interfaces/bank.interface';
 })
 export abstract class BankRepository {
   abstract pay(capital: number): Observable<Bank>;
+  abstract getCapital(): Observable<Bank>;
 }

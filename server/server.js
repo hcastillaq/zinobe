@@ -45,17 +45,11 @@ server.use((req, res, next) => {
 
 server.post('/bank/pay', (req, res) => {
   const { amount } = req.body;
-  const newCapital = DB.bank.capital - amount;
-  if (newCapital > 0) {
-    DB.bank.capital = newCapital;
-    res.status(200).jsonp({
-      capital: newCapital,
-    });
-  } else {
-    res.status(500).jsonp({
-      message: 'Bank have insufficient capital',
-    });
-  }
+  const newCapital = DB.bank.capital + amount;
+  DB.bank.capital = newCapital;
+  res.status(200).jsonp({
+    capital: newCapital,
+  });
 });
 
 server.get('/credits/pending/', (req, resp) => {

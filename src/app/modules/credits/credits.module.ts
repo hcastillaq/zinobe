@@ -8,6 +8,7 @@ import { MaterialModule } from '../material/material.module';
 import { PageCreateCreditsComponent } from './pages/page-create-credits/page-create-credits.component';
 import { CreditPayComponent } from './components/credit-pay/credit-pay.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CreditAmountComponent } from './components/credit-amount/credit-amount.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ListCreditsComponent,
     PageCreateCreditsComponent,
     CreditPayComponent,
+    CreditAmountComponent,
   ],
   imports: [
     CommonModule,

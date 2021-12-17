@@ -1,10 +1,14 @@
 <mat-card>
   <mat-card-content fxLayout="column" fxLayoutGap="20px">
-    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="end center"
+      fxLayoutGap="0px"
+      fxLayoutGap.gt-md="20px">
       <div *ngIf="loading" fxLayout="row" fxLayoutAlign="center">
         <mat-spinner diameter="20"></mat-spinner>
       </div>
-      <mat-form-field>
+      <mat-form-field fxFlex="100%" fxFlex.gt-md="20%">
         <mat-select placeholder="Status" [formControl]="selectCreditsByState">
           <mat-option value="all">All</mat-option>
           <mat-option value="pending">Pending</mat-option>
@@ -12,7 +16,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field fxFlex="100%" fxFlex.gt-md="50%">
+      <mat-form-field fxFlex="100%" fxFlex.gt-md="30%">
         <input matInput (keyup)="filter($event)" placeholder="Search" #input />
       </mat-form-field>
     </div>
