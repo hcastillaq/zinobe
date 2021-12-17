@@ -9,6 +9,8 @@ import { PageCreateCreditsComponent } from './pages/page-create-credits/page-cre
 import { CreditPayComponent } from './components/credit-pay/credit-pay.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreditAmountComponent } from './components/credit-amount/credit-amount.component';
+import { ComponentsModule } from '../components/components.module';
+import { CreditCreateComponent } from './components/credit-create/credit-create.component';
 
 @NgModule({
   declarations: [
@@ -17,11 +19,13 @@ import { CreditAmountComponent } from './components/credit-amount/credit-amount.
     PageCreateCreditsComponent,
     CreditPayComponent,
     CreditAmountComponent,
+    CreditCreateComponent,
   ],
   imports: [
     CommonModule,
     CreditsRoutingModule,
     MaterialModule,
+    ComponentsModule,
     FormsModule,
     ReactiveFormsModule,
   ],

@@ -1,6 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Credit } from '../../interfaces/credit.interface';
 import {
+  actionsCreditSetCredit,
   actionsCreditSetCredits,
   actionsCreditUpdateCredit,
 } from '../actions/credit.actions';
@@ -17,6 +18,9 @@ const reducer = createReducer<ReducerCredit>(
   reducerCreditInitialState,
   on(actionsCreditSetCredits, (state, payload) => {
     return { ...state, credits: payload.credits };
+  }),
+  on(actionsCreditSetCredit, (state, payload) => {
+    return { ...state, credits: [payload.credit, ...state.credits] };
   }),
   on(actionsCreditUpdateCredit, (state, payload) => {
     return {

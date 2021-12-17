@@ -1,0 +1,28 @@
+<form
+  [formGroup]="form"
+  fxFlex="100%"
+  fxLayout="row wrap"
+  fxLayout.gt-sm="row"
+  fxLayoutGap="20px">
+  <mat-form-field fxFlex="100%">
+    <input
+      matInput
+      placeholder="Cedula"
+      [readonly]="readonly"
+      formControlName="cedula" />
+  </mat-form-field>
+  <mat-form-field fxFlex="100%">
+    <input
+      matInput
+      placeholder="Name"
+      [readonly]="readonly"
+      formControlName="name" />
+  </mat-form-field>
+  <mat-form-field fxFlex="100%">
+    <input
+      matInput
+      placeholder="Email"
+      [readonly]="readonly"
+      formControlName="email" />
+  </mat-form-field>
+</form>

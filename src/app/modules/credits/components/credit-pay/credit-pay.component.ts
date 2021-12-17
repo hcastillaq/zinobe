@@ -15,13 +15,12 @@ import { actionsCreditUpdateCredit } from 'src/app/core/store/actions/credit.act
   styleUrls: ['./credit-pay.component.scss'],
 })
 export class CreditPayComponent implements OnInit {
-  @Input('credit') credit!: Credit;
+  @Input('credit') credit!: Credit | undefined;
   loading = false;
 
   constructor(
     private store: Store<Reducers>,
     private bankService: BankService,
-    private creditService: CreditService,
     private alertService: AlertService
   ) {}
 
@@ -35,7 +34,7 @@ export class CreditPayComponent implements OnInit {
    * @returns boolean
    */
   validToPay(): boolean {
-    return this.credit.approved && !this.credit.paid;
+    return this.credit ? this.credit.approved && !this.credit.paid : false;
   }
   /**
    * runs when user click in pay button, call the services for
@@ -43,20 +42,16 @@ export class CreditPayComponent implements OnInit {
    * @returns void
    */
   pay(): void {
-    this.loading = true;
-    this.bankService
-      .pay(this.credit.amount)
-      .pipe(
-        mergeMap((resp) => {
+    if (this.credit) {
+      this.loading = true;
+      this.bankService.pay(this.credit).subscribe({
+        next: (resp) => {
           this.store.dispatch(
-            actionsBankUpdateCapital({ capital: resp.capital })
+            actionsBankUpdateCapital({ capital: resp.bank.capital })
           );
-          return this.creditService.update({ ...this.credit, paid: true });
-        })
-      )
-      .subscribe({
-        next: (credit) => {
-          this.store.dispatch(actionsCreditUpdateCredit({ credit }));
+          this.store.dispatch(
+            actionsCreditUpdateCredit({ credit: resp.credit })
+          );
           this.loading = false;
         },
         error: (error: string) => {
@@ -64,5 +59,6 @@ export class CreditPayComponent implements OnInit {
           this.loading = false;
         },
       });
+    }
   }
 }

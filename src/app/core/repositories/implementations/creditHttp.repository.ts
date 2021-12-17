@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CreditRepository } from '../abstracts/credit.repository';
 import { Credit } from '../../interfaces/credit.interface';
+import { Bank } from '../../interfaces/bank.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +24,9 @@ export class CreditHttpRepository extends CreditRepository {
   }
   update(credit: Credit): Observable<Credit> {
     return this.http.put<Credit>(this.path + '/' + credit.id, credit);
+  }
+
+  create(credit: Credit): Observable<{ bank: Bank; credit: Credit }> {
+    return this.http.post<{ bank: Bank; credit: Credit }>(this.path, credit);
   }
 }

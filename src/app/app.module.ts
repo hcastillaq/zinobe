@@ -7,25 +7,24 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { MaterialModule } from './modules/material/material.module';
-import { BankCapitalComponent } from './components/bank-capital/bank-capital.component';
-import { NavigationComponent } from './components/navigation/navigation.component';
 import { reducers } from './core/store/reducers/reducers';
 import { HttpClientModule } from '@angular/common/http';
 import { UserRepository } from './core/repositories/abstracts/user.repository';
 import { UserHttpRepository } from './core/repositories/implementations/userHttp.repository';
 import { CreditRepository } from './core/repositories/abstracts/credit.repository';
 import { CreditHttpRepository } from './core/repositories/implementations/creditHttp.repository';
-import { BankService } from './core/services/bank.service';
 import { BankHttpRepository } from './core/repositories/implementations/bankHttp.repository';
 import { BankRepository } from './core/repositories/abstracts/bank.repository';
+import { ComponentsModule } from './modules/components/components.module';
 
 @NgModule({
-  declarations: [AppComponent, BankCapitalComponent, NavigationComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
+    ComponentsModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({

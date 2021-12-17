@@ -24,14 +24,13 @@ for (let i = 0; i < 100; i++) {
     date: faker.datatype.datetime().toLocaleDateString(),
     approved: faker.datatype.boolean(),
     paid: faker.datatype.boolean(),
-    amount: Number(faker.finance.amount(1000, 10000, false)),
+    amount: Number(faker.finance.amount(10000, 10000000, false)),
   });
 }
 
 // server.js
 const jsonServer = require('json-server');
 const server = jsonServer.create();
-const path = require('path');
 const router = jsonServer.router(DB);
 const middlewares = jsonServer.defaults();
 const port = 7000;
@@ -44,19 +43,37 @@ server.use((req, res, next) => {
 });
 
 server.post('/bank/pay', (req, res) => {
-  const { amount } = req.body;
-  const newCapital = DB.bank.capital + amount;
+  const credit = req.body;
+  credit.paid = true;
+  const newCapital = DB.bank.capital + credit.amount;
+  DB.credits = DB.credits.map((_credit) =>
+    _credit.id === credit.id ? credit : _credit
+  );
   DB.bank.capital = newCapital;
   res.status(200).jsonp({
-    capital: newCapital,
+    bank: DB.bank,
+    credit,
   });
 });
 
-server.get('/credits/pending/', (req, resp) => {
-  const credits = DB.credits.filter(
-    (credit) => credit.approved && !credit.paid
-  );
-  resp.status(200).jsonp(credits);
+server.post('/credits', (req, resp) => {
+  const credit = req.body;
+  const newCapital = DB.bank.capital - credit.amount;
+  credit.approved = faker.datatype.boolean();
+  credit.paid = false;
+  DB.credits.unshift(credit);
+
+  if (newCapital > 0 && credit.approved) {
+    DB.bank.capital = newCapital;
+  }
+
+  if (newCapital < 0) {
+    return resp.status(500).jsonp({ message: 'Bank not have founds' });
+  }
+  return resp.status(200).jsonp({
+    bank: DB.bank,
+    credit,
+  });
 });
 
 server.use(router);

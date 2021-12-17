@@ -25,7 +25,7 @@ export class ListCreditsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   selectCreditsByState = new FormControl('pending');
-  displayedColumns = ['name', 'amount', 'action'];
+  displayedColumns = ['name', 'cedula', 'amount', 'action'];
   loading = false;
   destroySubs = new Subject();
   credits: Credit[] = [];
@@ -37,7 +37,9 @@ export class ListCreditsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscribeCreditsStore();
 
     this.selectCreditsByState.valueChanges.subscribe(() => {
-      this.setCreditsInDataSourceWithFilter();
+      this.setCreditsInDataSourceWithFilter(
+        this.getCreditsWithExtraData(this.credits)
+      );
     });
   }
 
@@ -79,11 +81,10 @@ export class ListCreditsComponent implements OnInit, OnDestroy, AfterViewInit {
       .select((state) => state.credits.credits)
       .pipe(takeUntil(this.destroySubs))
       .subscribe((credits) => {
-        this.credits = credits.map((credit) => ({
-          ...credit,
-          name: credit.user.name,
-        }));
-        this.setCreditsInDataSourceWithFilter();
+        this.credits = credits;
+        this.setCreditsInDataSourceWithFilter(
+          this.getCreditsWithExtraData(credits)
+        );
       });
   }
 
@@ -91,19 +92,19 @@ export class ListCreditsComponent implements OnInit, OnDestroy, AfterViewInit {
    * set credits in dataSource with  filter depending select state value
    * @returns void
    */
-  setCreditsInDataSourceWithFilter(): void {
+  setCreditsInDataSourceWithFilter(credits: Credit[]): void {
     let tempCredits: Credit[] = [];
     switch (this.selectCreditsByState.value) {
       case 'all':
-        tempCredits = this.credits;
+        tempCredits = credits;
         break;
       case 'pending':
-        tempCredits = this.credits.filter(
+        tempCredits = credits.filter(
           (credit) => credit.approved && !credit.paid
         );
         break;
       case 'paid':
-        tempCredits = this.credits.filter((credit) => credit.paid);
+        tempCredits = credits.filter((credit) => credit.paid);
         break;
     }
     this.dataSource.data = tempCredits;
@@ -117,5 +118,28 @@ export class ListCreditsComponent implements OnInit, OnDestroy, AfterViewInit {
   filter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  /**
+   * get credit by id
+   * @param  {string} id
+   * @returns Credit
+   */
+  public getCreditById(id: string): Credit | undefined {
+    const credit = this.credits.find((credit) => credit.id === id);
+    return credit ? { ...credit } : undefined;
+  }
+
+  /**
+   * get credits with user data, is util for the filters
+   * @param  {Credit[]} credits
+   * @returns Credit
+   */
+  getCreditsWithExtraData(credits: Credit[]): Credit[] {
+    return credits.map((credit) => ({
+      ...credit,
+      name: credit.user.name,
+      cedula: credit.user.cedula,
+    }));
   }
 }
