@@ -2,13 +2,26 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CreditsRoutingModule } from './credits-routing.module';
-
+import { PageListCreditsComponent } from './pages/page-list-credits/page-list-credits.component';
+import { ListCreditsComponent } from './components/list-credits/list-credits.component';
+import { MaterialModule } from '../material/material.module';
+import { PageCreateCreditsComponent } from './pages/page-create-credits/page-create-credits.component';
+import { CreditPayComponent } from './components/credit-pay/credit-pay.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    PageListCreditsComponent,
+    ListCreditsComponent,
+    PageCreateCreditsComponent,
+    CreditPayComponent,
+  ],
   imports: [
     CommonModule,
-    CreditsRoutingModule
-  ]
+    CreditsRoutingModule,
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
-export class CreditsModule { }
+export class CreditsModule {}

@@ -1,6 +1,7 @@
 @use './scss/colors.scss';
 @use './scss/layout.scss';
 @use './scss/utils.scss';
+@use './scss/components';
 
 :root {
   --primary: #{colors.$primary};

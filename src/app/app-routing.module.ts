@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'credits',
     loadChildren: () =>
-      import('./modules/users/users.module').then((m) => m.UsersModule),
+      import('./modules/credits/credits.module').then((m) => m.CreditsModule),
   },
   {
     path: '**',

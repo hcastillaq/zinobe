@@ -1,0 +1,37 @@
+<mat-card>
+  <mat-card-content fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+      <div *ngIf="loading" fxLayout="row" fxLayoutAlign="center">
+        <mat-spinner diameter="20"></mat-spinner>
+      </div>
+      <mat-form-field appearance="standard" fxFlex="100%" fxFlex.gt-md="50%">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="filter($event)" placeholder="Search" #input />
+      </mat-form-field>
+    </div>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" fxFlex="100%">
+        <ng-container
+          *ngFor="let column of displayedColumns"
+          [matColumnDef]="column">
+          <th mat-header-cell *matHeaderCellDef>{{ column | uppercase }}</th>
+          <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <div
+      *ngIf="!dataSource.data.length && !loading"
+      fxLayout="row"
+      fxLayoutAlign="center">
+      <span class="mat-caption">Sorry, not found data.</span>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>
