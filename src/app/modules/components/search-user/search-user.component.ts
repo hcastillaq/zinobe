@@ -1,5 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/core/interfaces/user.interface';
 import { UserService } from 'src/app/core/services/user.service';
 
@@ -8,7 +15,8 @@ import { UserService } from 'src/app/core/services/user.service';
   templateUrl: './search-user.component.html',
   styleUrls: ['./search-user.component.scss'],
 })
-export class SearchUserComponent implements OnInit {
+export class SearchUserComponent implements OnInit, OnDestroy {
+  destroySubs = new Subject();
   loading = false;
   search = new FormControl('', [
     Validators.required,
@@ -21,6 +29,10 @@ export class SearchUserComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  ngOnDestroy(): void {
+    this.destroySubs.next(false);
+    this.destroySubs.complete();
+  }
   /**
    * runs when user click on search button
    * @returns void
@@ -36,15 +48,18 @@ export class SearchUserComponent implements OnInit {
    */
   getUser(cedula: number): void {
     this.loading = true;
-    this.userService.getUserByCedula(cedula).subscribe({
-      next: (users) => {
-        const user = users[0];
-        this.user.emit(user);
-        this.loading = false;
-      },
-      error: (err) => {
-        this.loading = false;
-      },
-    });
+    this.userService
+      .getUserByCedula(cedula)
+      .pipe(takeUntil(this.destroySubs))
+      .subscribe({
+        next: (users) => {
+          const user = users[0];
+          this.user.emit(user);
+          this.loading = false;
+        },
+        error: (err) => {
+          this.loading = false;
+        },
+      });
   }
 }

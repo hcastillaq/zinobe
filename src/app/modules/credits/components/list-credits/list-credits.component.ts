@@ -36,11 +36,13 @@ export class ListCreditsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.getCredits();
     this.subscribeCreditsStore();
 
-    this.selectCreditsByState.valueChanges.subscribe(() => {
-      this.setCreditsInDataSourceWithFilter(
-        this.getCreditsWithExtraData(this.credits)
-      );
-    });
+    this.selectCreditsByState.valueChanges
+      .pipe(takeUntil(this.destroySubs))
+      .subscribe(() => {
+        this.setCreditsInDataSourceWithFilter(
+          this.getCreditsWithExtraData(this.credits)
+        );
+      });
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,9 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { User } from '../../interfaces/user.interface';
-import { actionsUsersSetUsers } from '../actions/users.actions';
+import {
+  actionsUsersSetUser,
+  actionsUsersSetUsers,
+} from '../actions/users.actions';
 
 export interface ReducerUser {
   users: User[];
@@ -14,6 +17,9 @@ const reducer = createReducer<ReducerUser>(
   reducerCreditInitialState,
   on(actionsUsersSetUsers, (state, { users }) => {
     return { ...state, users: users };
+  }),
+  on(actionsUsersSetUser, (state, { user }) => {
+    return { ...state, users: [user, ...state.users] };
   })
 );
 

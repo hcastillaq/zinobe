@@ -1,5 +1,6 @@
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { UserRepository } from '../repositories/abstracts/user.repository';
 
@@ -15,5 +16,13 @@ export class UserService {
 
   getUserByCedula(cedula: number): Observable<User[]> {
     return this.repository.getUserByCedula(cedula);
+  }
+
+  create(user: User): Observable<User> {
+    return this.repository
+      .create(user)
+      .pipe(
+        catchError((error: HttpErrorResponse) => throwError(() => error.error))
+      );
   }
 }

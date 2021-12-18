@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { concatMap, delay, forkJoin, mergeMap } from 'rxjs';
+import { concatMap, delay, forkJoin, mergeMap, Subject, takeUntil } from 'rxjs';
 import { Credit } from 'src/app/core/interfaces/credit.interface';
 import { Reducers } from 'src/app/core/interfaces/reducers.interface';
 import { AlertService } from 'src/app/core/services/alert.service';
@@ -14,9 +14,10 @@ import { actionsCreditUpdateCredit } from 'src/app/core/store/actions/credit.act
   templateUrl: './credit-pay.component.html',
   styleUrls: ['./credit-pay.component.scss'],
 })
-export class CreditPayComponent implements OnInit {
+export class CreditPayComponent implements OnInit, OnDestroy {
   @Input('credit') credit!: Credit | undefined;
   loading = false;
+  destroySubs = new Subject();
 
   constructor(
     private store: Store<Reducers>,
@@ -28,6 +29,10 @@ export class CreditPayComponent implements OnInit {
     if (!this.credit) {
       throw new Error('Credit is quired');
     }
+  }
+  ngOnDestroy(): void {
+    this.destroySubs.next(false);
+    this.destroySubs.complete();
   }
   /**
    * validate if credit is valid for pay
@@ -44,21 +49,24 @@ export class CreditPayComponent implements OnInit {
   pay(): void {
     if (this.credit) {
       this.loading = true;
-      this.bankService.pay(this.credit).subscribe({
-        next: (resp) => {
-          this.store.dispatch(
-            actionsBankUpdateCapital({ capital: resp.bank.capital })
-          );
-          this.store.dispatch(
-            actionsCreditUpdateCredit({ credit: resp.credit })
-          );
-          this.loading = false;
-        },
-        error: (error: string) => {
-          this.alertService.default(error);
-          this.loading = false;
-        },
-      });
+      this.bankService
+        .pay(this.credit)
+        .pipe(takeUntil(this.destroySubs))
+        .subscribe({
+          next: (resp) => {
+            this.store.dispatch(
+              actionsBankUpdateCapital({ capital: resp.bank.capital })
+            );
+            this.store.dispatch(
+              actionsCreditUpdateCredit({ credit: resp.credit })
+            );
+            this.loading = false;
+          },
+          error: (error: string) => {
+            this.alertService.default(error);
+            this.loading = false;
+          },
+        });
     }
   }
 }

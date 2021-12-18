@@ -7,6 +7,7 @@ import { PageUsersCreateComponent } from './pages/page-users-create/page-users-c
 import { ListUsersComponent } from './components/list-users/list-users.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { MaterialModule } from '../material/material.module';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { MaterialModule } from '../material/material.module';
     ListUsersComponent,
     CreateUserComponent,
   ],
-  imports: [CommonModule, UsersRoutingModule, MaterialModule],
+  imports: [CommonModule, UsersRoutingModule, MaterialModule, ComponentsModule],
   providers: [],
 })
 export class UsersModule {}

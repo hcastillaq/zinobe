@@ -1,6 +1,7 @@
 //DB
 const faker = require('faker');
 const nanoid = require('nanoid');
+
 const DB = {
   bank: {
     capital: 999999999,
@@ -8,25 +9,30 @@ const DB = {
   users: [],
   credits: [],
 };
-const nid = nanoid.customAlphabet('1234567890', 10);
-for (let i = 0; i < 100; i++) {
-  DB.users.push({
-    id: faker.datatype.uuid(),
-    name: faker.name.findName(),
-    email: faker.internet.email(),
-    cedula: Number(nid()),
-  });
-  const user = DB.users[Math.floor(Math.random() * DB.users.length)];
-  DB.credits.push({
-    id: faker.datatype.uuid(),
-    user_id: user.id,
-    user: user,
-    date: faker.datatype.datetime().toLocaleDateString(),
-    approved: faker.datatype.boolean(),
-    paid: faker.datatype.boolean(),
-    amount: Number(faker.finance.amount(10000, 10000000, false)),
-  });
-}
+
+const fakeData = () => {
+  const nid = nanoid.customAlphabet('1234567890', 10);
+  for (let i = 0; i < 100; i++) {
+    DB.users.push({
+      id: faker.datatype.uuid(),
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      cedula: Number(nid()),
+    });
+    const user = DB.users[Math.floor(Math.random() * DB.users.length)];
+    DB.credits.push({
+      id: faker.datatype.uuid(),
+      user_id: user.id,
+      user: user,
+      date: faker.datatype.datetime().toLocaleDateString(),
+      approved: faker.datatype.boolean(),
+      paid: faker.datatype.boolean(),
+      amount: Number(faker.finance.amount(10000, 10000000, false)),
+    });
+  }
+};
+
+fakeData();
 
 // server.js
 const jsonServer = require('json-server');
@@ -74,6 +80,22 @@ server.post('/credits', (req, resp) => {
     bank: DB.bank,
     credit,
   });
+});
+
+server.post('/users', (req, resp) => {
+  const user = req.body;
+  user.cedula = Number(user.cedula);
+  const find = DB.users.find(
+    (_user) =>
+      Number(_user.cedula) === Number(user.cedula) || _user.email === user.email
+  );
+  if (!find) {
+    DB.users.unshift(user);
+    return resp.status(200).jsonp(user);
+  }
+  return resp
+    .status(500)
+    .jsonp({ message: 'duplicate data, please validate information.' });
 });
 
 server.use(router);

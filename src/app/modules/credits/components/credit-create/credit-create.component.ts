@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { nanoid } from 'nanoid';
+import { Subject, takeUntil } from 'rxjs';
 import { Credit } from 'src/app/core/interfaces/credit.interface';
 import { HttpError } from 'src/app/core/interfaces/errors.interface';
 import { User } from 'src/app/core/interfaces/user.interface';
@@ -20,13 +21,13 @@ import { actionsCreditSetCredit } from 'src/app/core/store/actions/credit.action
   templateUrl: './credit-create.component.html',
   styleUrls: ['./credit-create.component.scss'],
 })
-export class CreditCreateComponent implements OnInit {
+export class CreditCreateComponent implements OnInit, OnDestroy {
   min = 1000;
   max = 999999999;
   loading = false;
   form: FormGroup = this.buildForm();
   user!: User | undefined;
-
+  destroySubs = new Subject();
   constructor(
     private formBuilder: FormBuilder,
     private creditService: CreditService,
@@ -35,7 +36,10 @@ export class CreditCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
-
+  ngOnDestroy(): void {
+    this.destroySubs.next(false);
+    this.destroySubs.complete();
+  }
   /**
    * build form
    * @returns FormGroup
@@ -72,24 +76,27 @@ export class CreditCreateComponent implements OnInit {
     this.loading = true;
     const credit: Credit = this.form.value;
     credit.user_id = credit.user.id;
-    this.creditService.create(credit).subscribe({
-      next: (resp) => {
-        this.store.dispatch(
-          actionsBankUpdateCapital({ capital: resp.bank.capital })
-        );
-        this.store.dispatch(actionsCreditSetCredit({ credit: resp.credit }));
-        this.loading = false;
-        this.resetState();
-        const message = resp.credit.approved
-          ? 'and approved.'
-          : 'but not approved.';
-        this.alertService.default('Credit created ' + message);
-      },
-      error: (error: HttpError) => {
-        this.loading = false;
-        this.alertService.default(error.message);
-      },
-    });
+    this.creditService
+      .create(credit)
+      .pipe(takeUntil(this.destroySubs))
+      .subscribe({
+        next: (resp) => {
+          this.store.dispatch(
+            actionsBankUpdateCapital({ capital: resp.bank.capital })
+          );
+          this.store.dispatch(actionsCreditSetCredit({ credit: resp.credit }));
+          this.loading = false;
+          this.resetState();
+          const message = resp.credit.approved
+            ? 'and approved.'
+            : 'but not approved.';
+          this.alertService.default('Credit created ' + message);
+        },
+        error: (error: HttpError) => {
+          this.loading = false;
+          this.alertService.default(error.message);
+        },
+      });
   }
 
   resetState(): void {
