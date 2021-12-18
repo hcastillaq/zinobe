@@ -1,0 +1,24 @@
+<div
+  fxLayout="row wrap"
+  fxLayout.gt-sm="row"
+  fxLayoutAlign="end center"
+  fxLayoutAlign.gt-xs="start center"
+  fxLayoutGap="20px">
+  <mat-form-field fxFlex="100%" fxFlex.gt-xs="50%">
+    <input
+      matInput
+      placeholder="Search user by cedula"
+      [formControl]="search" />
+  </mat-form-field>
+  <button
+    [disabled]="loading || search.invalid"
+    type="button"
+    mat-raised-button
+    (click)="searchUser()"
+    color="primary">
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
+      <span>Search</span>
+      <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+    </div>
+  </button>
+</div>

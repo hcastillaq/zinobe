@@ -1,5 +1,6 @@
 export interface User {
-  name: string,
-  email: string,
-  cedula: number,
+  id: string;
+  name: string;
+  email: string;
+  cedula: number;
 }

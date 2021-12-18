@@ -1,0 +1,13 @@
+nav {
+  a {
+    text-decoration: none;
+    padding: 5px 20px;
+    border-radius: 2.6em;
+    font-size: 1.2em;
+    color: black;
+    &.active {
+      color: white;
+      background-color: var(--primary);
+    }
+  }
+}

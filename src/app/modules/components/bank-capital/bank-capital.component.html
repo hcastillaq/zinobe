@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutAlign="end center" class="mat-h1">
+  <div
+    class="bank_capital"
+    fxLayout="column"
+    fxLayoutGap="10px"
+    fxLayoutAlign="end end">
+    <span>Bank Capital</span>
+    <span *ngIf="!loading">{{ capital | async | currency }}</span>
+    <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+  </div>
+</div>

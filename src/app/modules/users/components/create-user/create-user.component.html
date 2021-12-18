@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-content>
+    <app-user-form [reset]="reset" (values)="setUser($event)"></app-user-form>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+      <button type="button" mat-flat-button routerLink="/users/list">
+        Cancel
+      </button>
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        [disabled]="control.invalid || loading"
+        (click)="create()">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
+          <span>Create</span>
+          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+        </div>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
